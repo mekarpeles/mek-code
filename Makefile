@@ -7,34 +7,34 @@ help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
 up: ## Start all services
-	docker-compose up -d
+	docker compose up -d
 
 down: ## Stop all services
-	docker-compose down
+	docker compose down
 
 restart: ## Restart all services
-	docker-compose restart
+	docker compose restart
 
 logs: ## Show logs from all services
-	docker-compose logs -f
+	docker compose logs -f
 
 build: ## Build/rebuild the agent container
-	docker-compose build
+	docker compose build
 
 clean: ## Stop services and remove volumes (clean slate)
-	docker-compose down -v
+	docker compose down -v
 
 status: ## Show status of all services
-	docker-compose ps
+	docker compose ps
 
 shell: ## Open a shell in the agent container
-	docker-compose exec agent bash
+	docker compose exec agent bash
 
 shell-model: ## Open a shell in the model container
-	docker-compose exec model bash
+	docker compose exec model bash
 
 pull-model: ## Manually pull the qwen3:4b-16k model
-	docker-compose exec model ollama pull qwen3:4b-16k
+	docker compose exec model ollama pull qwen3:4b-16k
 
 test-ollama: ## Test Ollama connection from host
 	curl http://localhost:11434/api/tags
