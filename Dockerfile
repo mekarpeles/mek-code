@@ -26,4 +26,4 @@ COPY config.json /root/.config/opencode/config.json
 WORKDIR /workspace
 
 # Keep container running
-CMD ["tail", "-f", "/dev/null"]
+CMD ["sleep", "infinity"]

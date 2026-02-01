@@ -29,6 +29,7 @@ done
 
 if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
     echo "❌ Ollama failed to start"
+    echo "   Check logs with: docker compose logs model"
     exit 1
 fi
 
