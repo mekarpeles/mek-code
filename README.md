@@ -6,11 +6,30 @@ Self-hosted dockerized OpenCode instance with ollama/qwen3:4b-16k for M2 8GB RAM
 
 Two Docker containers:
 - **model** - Runs Ollama with qwen3:4b-16k model
-- **agent** - Runs OpenCode CLI (npm package)
+- **assistant** - Runs OpenCode CLI (npm package)
 
 They communicate via Docker's default bridge network. This is an all-in-Docker setup with CPU-only inference for complete isolation.
 
 ## Quick Start
+
+### Option 1: One-Line Install (Recommended)
+
+Run this single command to download and set up everything:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/mekarpeles/mek-code/main/install.sh | bash
+```
+
+This will:
+- Clone the repository to `~/mek-code` (customize with `MEK_CODE_DIR` environment variable)
+- Start both Docker containers
+- Wait for Ollama to be ready
+- Pull the qwen3:4b model
+- Create the qwen3:4b-16k variant with extended context (16384 tokens)
+- Verify the assistant container is running
+- Display intermediate success messages at each step
+
+### Option 2: Manual Install
 
 1. Clone the repository:
 ```bash
@@ -31,14 +50,14 @@ This will:
 
 ## Usage
 
-Access the agent container:
+Access the assistant container:
 ```bash
-docker compose exec agent bash
+docker compose exec assistant bash
 ```
 
 Run OpenCode:
 ```bash
-docker compose exec agent opencode
+docker compose exec assistant opencode
 ```
 
 Stop services:
@@ -48,7 +67,7 @@ docker compose down
 
 ## Configuration
 
-OpenCode is configured via `config.json` which is copied into the agent container at `/root/.config/opencode/config.json`.
+OpenCode is configured via `config.json` which is copied into the assistant container at `/root/.config/opencode/config.json`.
 
 The configuration uses:
 - Provider: Ollama via OpenAI-compatible API
@@ -64,7 +83,8 @@ The configuration uses:
 ## Files
 
 - `docker-compose.yml` - Service orchestration
-- `Dockerfile` - Agent container with Node.js 20.x and OpenCode
+- `Dockerfile` - Assistant container with Node.js 20.x and OpenCode
 - `config.json` - OpenCode configuration
 - `setup.sh` - Complete setup script
-- `workspace/` - Working directory mounted in agent container
+- `install.sh` - One-line installer script
+- `workspace/` - Working directory mounted in assistant container

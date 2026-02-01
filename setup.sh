@@ -12,6 +12,8 @@ fi
 # Start services
 echo "📦 Starting Docker containers..."
 docker compose up -d
+echo "✅ Docker containers started successfully"
+echo ""
 
 # Wait for model service to be healthy
 echo "⏳ Waiting for Ollama to be ready..."
@@ -36,6 +38,8 @@ fi
 # Pull qwen3:4b model
 echo "📥 Pulling qwen3:4b model (this may take a few minutes)..."
 docker compose exec model ollama pull qwen3:4b
+echo "✅ qwen3:4b model downloaded successfully"
+echo ""
 
 # Create 16k context variant
 echo "🔧 Creating qwen3:4b-16k variant with extended context..."
@@ -43,22 +47,38 @@ docker compose exec model sh -c 'cat > /tmp/qwen3-16k.modelfile << EOF
 FROM qwen3:4b
 PARAMETER num_ctx 16384
 EOF'
-if ! docker compose exec model ollama list | grep -q "qwen3:4b-16k"; then
+
+if ! docker compose exec model ollama create qwen3:4b-16k -f /tmp/qwen3-16k.modelfile; then
     echo "❌ Failed to create qwen3:4b-16k model"
     exit 1
 fi
 
-docker compose exec model ollama create qwen3:4b-16k -f /tmp/qwen3-16k.modelfile
+if ! docker compose exec model ollama list | grep -q "qwen3:4b-16k"; then
+    echo "❌ Failed to verify qwen3:4b-16k model"
+    exit 1
+fi
+echo "✅ qwen3:4b-16k model created successfully"
+echo ""
+
+# Verify assistant container is running
+echo "🔍 Verifying assistant container..."
+if [ "$(docker ps --filter 'name=assistant' --format '{{.Names}}')" = "assistant" ]; then
+    echo "✅ Assistant container is live and running"
+else
+    echo "❌ Assistant container is not running"
+    exit 1
+fi
+echo ""
 
 echo "✅ Setup complete!"
 echo ""
 echo "🎉 OpenCode is ready to use!"
 echo ""
-echo "To access the agent container:"
-echo "  docker compose exec agent bash"
+echo "To access the assistant container:"
+echo "  docker compose exec assistant bash"
 echo ""
 echo "To use OpenCode:"
-echo "  docker compose exec agent opencode"
+echo "  docker compose exec assistant opencode"
 echo ""
 echo "To stop services:"
 echo "  docker compose down"
