@@ -35,10 +35,14 @@ if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
     exit 1
 fi
 
-# Pull qwen3:4b model
-echo "📥 Pulling qwen3:4b model (this may take a few minutes)..."
-docker compose exec model ollama pull qwen3:4b
-echo "✅ qwen3:4b model downloaded successfully"
+# Pull qwen3:4b model only if not already present
+if ! docker compose exec model ollama list | grep -q "qwen3:4b"; then
+    echo "📥 Pulling qwen3:4b model (this may take a few minutes)..."
+    docker compose exec model ollama pull qwen3:4b
+    echo "✅ qwen3:4b model downloaded successfully"
+else
+    echo "✅ qwen3:4b model already exists, skipping download"
+fi
 echo ""
 
 # Create 16k context variant
