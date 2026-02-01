@@ -48,10 +48,13 @@ FROM qwen3:4b
 PARAMETER num_ctx 16384
 EOF'
 
-docker compose exec model ollama create qwen3:4b-16k -f /tmp/qwen3-16k.modelfile
+if ! docker compose exec model ollama create qwen3:4b-16k -f /tmp/qwen3-16k.modelfile; then
+    echo "❌ Failed to create qwen3:4b-16k model"
+    exit 1
+fi
 
 if ! docker compose exec model ollama list | grep -q "qwen3:4b-16k"; then
-    echo "❌ Failed to create qwen3:4b-16k model"
+    echo "❌ Failed to verify qwen3:4b-16k model"
     exit 1
 fi
 echo "✅ qwen3:4b-16k model created successfully"
@@ -59,7 +62,7 @@ echo ""
 
 # Verify assistant container is running
 echo "🔍 Verifying assistant container..."
-if docker ps | grep -q "assistant"; then
+if [ "$(docker ps --filter 'name=assistant' --format '{{.Names}}')" = "assistant" ]; then
     echo "✅ Assistant container is live and running"
 else
     echo "❌ Assistant container is not running"
