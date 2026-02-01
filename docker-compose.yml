@@ -1,0 +1,27 @@
+services:
+  model:
+    image: ollama/ollama:latest
+    container_name: model
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  agent:
+    build: .
+    container_name: agent
+    depends_on:
+      model:
+        condition: service_healthy
+    volumes:
+      - ./workspace:/workspace
+    restart: unless-stopped
+
+volumes:
+  ollama-data:
