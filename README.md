@@ -31,6 +31,13 @@ These containers communicate via Docker's internal network. This architecture sa
    ```
 
 2. **Start the services:**
+   
+   Using the quick start script (recommended):
+   ```bash
+   ./start.sh
+   ```
+   
+   Or manually with Docker Compose:
    ```bash
    docker compose up -d
    ```
@@ -98,7 +105,7 @@ docker compose logs -f
 
 ### Model Configuration
 
-To use a different Ollama model, edit the `docker compose.yml` file:
+To use a different Ollama model, edit the `docker-compose.yml` file:
 
 ```yaml
 environment:
@@ -187,7 +194,7 @@ docker compose up -d
 
 To modify the setup:
 
-1. Edit the relevant files (`Dockerfile`, `docker compose.yml`, etc.)
+1. Edit the relevant files (`Dockerfile`, `docker-compose.yml`, etc.)
 2. Rebuild: `docker compose build`
 3. Restart: `docker compose up -d`
 

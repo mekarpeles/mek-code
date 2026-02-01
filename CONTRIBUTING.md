@@ -35,7 +35,11 @@ Thank you for your interest in contributing to mek-code!
    ```bash
    docker compose config
    ```
-3. Apply changes:
+3. Verify the configuration builds successfully:
+   ```bash
+   docker compose build --no-cache
+   ```
+4. Apply changes:
    ```bash
    docker compose up -d
    ```
