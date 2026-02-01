@@ -14,7 +14,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     rm -rf /var/lib/apt/lists/*
 
 # Install OpenCode globally
-RUN npm install -g opencode
+RUN npm install -g opencode-ai
 
 # Create config directory
 RUN mkdir -p /root/.config/opencode
