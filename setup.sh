@@ -43,6 +43,11 @@ docker compose exec model sh -c 'cat > /tmp/qwen3-16k.modelfile << EOF
 FROM qwen3:4b
 PARAMETER num_ctx 16384
 EOF'
+if ! docker compose exec model ollama list | grep -q "qwen3:4b-16k"; then
+    echo "❌ Failed to create qwen3:4b-16k model"
+    exit 1
+fi
+
 docker compose exec model ollama create qwen3:4b-16k -f /tmp/qwen3-16k.modelfile
 
 echo "✅ Setup complete!"
