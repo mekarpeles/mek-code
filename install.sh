@@ -38,22 +38,13 @@ INSTALL_DIR="${MEK_CODE_DIR:-$HOME/mek-code}"
 # Check if directory already exists
 if [ -d "$INSTALL_DIR" ]; then
     echo -e "${YELLOW}⚠️  Directory $INSTALL_DIR already exists.${NC}"
-    read -p "Do you want to remove it and reinstall? (y/N): " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        echo "🗑️  Removing existing directory..."
-        rm -rf "$INSTALL_DIR"
-    else
-        echo "Installation cancelled."
-        exit 0
-    fi
+else
+    # Clone the repository
+    echo -e "${GREEN}📥 Cloning mek-code repository...${NC}"
+    git clone https://github.com/mekarpeles/mek-code.git "$INSTALL_DIR"
+    echo -e "${GREEN}✅ Repository cloned successfully${NC}"
+    echo ""
 fi
-
-# Clone the repository
-echo -e "${GREEN}📥 Cloning mek-code repository...${NC}"
-git clone https://github.com/mekarpeles/mek-code.git "$INSTALL_DIR"
-echo -e "${GREEN}✅ Repository cloned successfully${NC}"
-echo ""
 
 # Change to installation directory
 cd "$INSTALL_DIR"
