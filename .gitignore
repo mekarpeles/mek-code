@@ -1,0 +1,23 @@
+# Docker volumes
+.docker/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+*.tmp
+
+# Environment variables (if local overrides are created)
+.env.local

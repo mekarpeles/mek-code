@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # Ollama model service
+  model:
+    image: ollama/ollama:latest
+    container_name: mek-code-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - mek-code-network
+    restart: unless-stopped
+
+  # OpenCode agent service
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mek-code-agent
+    depends_on:
+      model:
+        condition: service_healthy
+    volumes:
+      - agent_data:/workspace
+      - ./config:/app/config:ro
+    environment:
+      - OLLAMA_API_BASE=http://model:11434
+      - OPENCODE_MODEL=qwen3:4b-16k
+    networks:
+      - mek-code-network
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+    restart: unless-stopped
+
+networks:
+  mek-code-network:
+    driver: bridge
+
+volumes:
+  ollama_data:
+    driver: local
+  agent_data:
+    driver: local
