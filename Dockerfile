@@ -1,38 +1,29 @@
 FROM python:3.11-slim
 
-# Set working directory
-WORKDIR /app
-
-# Install system dependencies
+# Install system dependencies including curl (needed for Node.js install)
 RUN apt-get update && apt-get install -y \
     curl \
     git \
+    vim \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Install OpenCode CLI
-# Using pip to install open-code-cli if it exists, otherwise clone from GitHub
-RUN pip install --no-cache-dir \
-    requests \
-    openai \
-    anthropic \
-    && pip install --no-cache-dir open-code-cli || \
-    (git clone https://github.com/modelcontextprotocol/open-code.git /tmp/open-code && \
-     cd /tmp/open-code && \
-     pip install -e . && \
-     rm -rf /tmp/open-code/.git)
+# Install Node.js 20.x (REQUIRED for OpenCode which is an npm package)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
 
-# Create workspace directory
-RUN mkdir -p /workspace
+# Install OpenCode globally
+RUN npm install -g opencode
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
-ENV OLLAMA_API_BASE=http://model:11434
+# Create config directory
+RUN mkdir -p /root/.config/opencode
 
-# Copy entrypoint script
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+# Copy config file
+COPY config.json /root/.config/opencode/config.json
 
-# Set entrypoint
-ENTRYPOINT ["/app/entrypoint.sh"]
-CMD ["/bin/bash"]
+# Set working directory
+WORKDIR /workspace
+
+# Keep container running
+CMD ["tail", "-f", "/dev/null"]

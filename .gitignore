@@ -1,8 +1,6 @@
-# Docker volumes
-.docker/
-
-# Logs
-*.log
+# Workspace
+workspace/*
+!workspace/.gitkeep
 
 # OS
 .DS_Store
@@ -14,10 +12,3 @@ Thumbs.db
 *.swp
 *.swo
 *~
-
-# Temporary files
-tmp/
-*.tmp
-
-# Environment variables (if local overrides are created)
-.env.local
