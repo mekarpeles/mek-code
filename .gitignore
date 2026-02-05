@@ -1,0 +1,21 @@
+# Environment
+*.env
+*.env.local
+
+# State
+mailbox/inbox/*
+!mailbox/inbox/.keep
+mailbox/outbox/*
+!mailbox/outbox/.keep
+tasks/*.json
+!tasks/.keep
+
+# Docker
+.docker/
+
+# Python
+__pycache__/
+*.pyc
+
+# System
+.DS_Store

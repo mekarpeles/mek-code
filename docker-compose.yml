@@ -1,0 +1,20 @@
+services:
+
+  assistant:
+    build:
+      context: .
+      dockerfile: setup/Dockerfile
+    container_name: assistant
+    volumes:
+      - .:/workspace
+      - ./mailbox:/app/mailbox
+      - ./tasks:/app/tasks
+      - ./context:/app/context
+      - ./memory:/app/memory
+      - ./skills:/app/skills
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+volumes:
+  ollama-data:
